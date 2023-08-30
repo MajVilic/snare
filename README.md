@@ -1,5 +1,17 @@
 SNARE
 =====
+**Important**
+
+_**Deviation from original code from mushorg.**_ 
+
+- Added capability for https request.
+- Aditional steps need to be configured in the original snare Dockerfile.
+    - Adjusting github url and checkout.
+    - Mapping certificate, key from /root/dist. (Files in /root/dist are copied from dist/ on host machine - already configured) }$
+- Port 443 needs to be added into docker-compose file.
+
+--------------
+
 
 [![Documentation Status](https://readthedocs.org/projects/snare/badge/?version=latest)](http://snare.readthedocs.io/en/latest/?badge=latest)
 [![Build Status](https://travis-ci.org/mushorg/snare.svg?branch=master)](https://travis-ci.org/mushorg/snare)
