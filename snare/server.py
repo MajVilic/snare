@@ -90,16 +90,21 @@ class HttpRequestHandler:
         await self.runner.setup()
 
         # Create an SSL context
-        ssl_context = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
-        ssl_context.load_cert_chain(certfile='/opt/ssl/certfile.pem', keyfile='/opt/ssl/keyfile.pem')
+        if self.ssl_cert and self.ssl_key:
+            ssl_context = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
+            ssl_context.load_cert_chain(certfile=self.ssl_cert, keyfile=self.ssl_key)
+        else:
+            ssl_context = None
 
         # For HTTP
         http_site = web.TCPSite(self.runner, self.run_args.host_ip, self.run_args.port)
-        # For HTTPS
-        https_site = web.TCPSite(self.runner, self.run_args.host_ip, 443, ssl_context=ssl_context)
-
         await http_site.start()
-        await https_site.start()
+
+        
+        # For HTTPS
+        if ssl_context:
+            https_site = web.TCPSite(self.runner, self.run_args.host_ip, 443, ssl_context=ssl_context)
+            await https_site.start()
 
         names = sorted(str(s.name) for s in self.runner.sites)
         print("======== Running on {} ========\n" "(Press CTRL+C to quit)".format(", ".join(names)))
