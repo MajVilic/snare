@@ -87,7 +87,7 @@ class HttpRequestHandler:
         await self.runner.setup()
 
         # Create an SSL context
-        ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+        ssl_context = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
         ssl_context.load_cert_chain(certfile='/opt/ssl/certfile.pem', keyfile='/opt/ssl/keyfile.pem')
 
         # For HTTP
