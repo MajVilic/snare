@@ -20,6 +20,9 @@ class HttpRequestHandler:
         self.logger = logging.getLogger(__name__)
         self.sroute = StaticRoute(name=None, prefix="/", directory=self.dir)
         self.tanner_handler = TannerHandler(run_args, meta, snare_uuid)
+        self.ssl_cert = run_args.ssl_cert
+        self.ssl_key = run_args.ssl_key
+
 
     async def submit_slurp(self, data):
         try:
