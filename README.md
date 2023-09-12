@@ -1,14 +1,21 @@
 SNARE
 =====
-**Important**
+
+$\color{red}\textsf{\Large\&#x26A0;\kern{0.2cm}\large  Important}$ 
 
 _**Deviation from original code from mushorg.**_ 
 
 - Added capability for https request.
 - Aditional steps need to be configured in the original snare Dockerfile.
     - Adjusting github url and checkout.
-    - Mapping certificate, key from /root/dist. (Files in /root/dist are copied from dist/ on host machine - already configured) }$
+    - Mapping certificate, key from /root/dist. (Files in /root/dist are copied from dist/ on host machine - already configured)
 - Port 443 needs to be added into docker-compose file.
+
+**Recomended settings**
+
+- Adjust docker daemon (create: etc/docker/daemon.json). In case when you have only specific honeypots enabled. Limit your ip address pool to have less impact on your system. (e.g. 192.168.1.1/28).
+- Change /etc/crontab. Comment out image update. If you leave your image names the same in your custom configuration they will get replaced/updated by pulling of original images. $\color{red}\textsf{\Large\&#x24D8;\kern{0.2cm}}$
+- Adjust routing-table.service - be
 
 **Additional info:**
 
