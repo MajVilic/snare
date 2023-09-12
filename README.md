@@ -3,30 +3,30 @@ SNARE
 
 $\color{red}\textsf{\Large\&#x26A0;\kern{0.2cm}\large  Important}$ 
 
-_**Deviation from original code from mushorg.**_ 
+**Deviation from original code from mushorg.**
 
 - Added capability for https request.
 - Aditional steps need to be configured in the original snare Dockerfile.
     - Adjusting github url and checkout.
-    - Mapping certificate, key from /root/dist. (Files in /root/dist are copied from dist/ on host machine - already configured)
+    - Mapping certificate, key from `/root/dist`. Files in `/root/dist` are copied from `dist/` on host machine - already configured.
 - Port 443 needs to be added into docker-compose file.
 
 **Recomended settings**
 
-- Adjust docker daemon (create: etc/docker/daemon.json). In case when you have only specific honeypots enabled. Limit your ip address pool to have less impact on your system. (e.g. 192.168.1.1/28).
-- Change /etc/crontab. Comment out image update. If you leave your image names the same in your custom configuration they will get replaced/updated by pulling of original images. $\color{red}\textsf{\Large\&#x24D8;\kern{0.2cm}}$
-- Adjust routing-table.service - be
+- Adjust docker daemon, create: `etc/docker/daemon.json`. In case when you have only specific honeypots enabled. Limit your ip address pool to have less impact on your system. (e.g. `192.168.1.1/28`).
+    - Adjust `/usr/local/bin/adjust-routing-table.sh`. In case you made changes to ip routing table manualy or via daemon.json you need to put those changes to `adjust-routing-table.sh`. This code automaticaly flunshes ip route table and makes a default update. Another option is to simply stop this service from running. $\color{red}\textsf{\Large\&#x24D8;\kern{0.2cm}}$
+- Change `/etc/crontab`. Comment out image update. If you leave your image names the same in your custom configuration they will get replaced/updated by pulling of original images. $\color{red}\textsf{\Large\&#x24D8;\kern{0.2cm}}$
 
 **Additional info:**
 
 HTTPS usage is hardcoded in server.py aswell as its port. 
-- Therefore you don't need to specify --443 port flag in CMD line in your Dockerfile (part of tpotice, on your host machine).
+- Therefore you don't need to specify `--443` port flag in CMD line in your Dockerfile (part of tpotice, on your host machine).
   
 As of right now modified snare supports both http and https.
 - If you want more flexibility meaning you want to use --443 flag you would need to adjust server.py.
     + If you decide to do that you can chose on what port/protocol snare listens in your Dockerfile (CMD line).
 
-**P.S.** Another way to manipulate http or https availability is in your docker-compose file with port mapping (e.g. 443:433).
+**P.S.** Another way to manipulate http or https availability is in your docker-compose file with port mapping (`e.g. 443:433`).
 
 --------------
 
