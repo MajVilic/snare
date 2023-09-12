@@ -23,7 +23,7 @@ HTTPS usage is hardcoded in server.py aswell as its port.
 - Therefore you don't need to specify `--443` port flag in CMD line in your Dockerfile (part of tpotice, on your host machine).
   
 As of right now modified snare supports both http and https.
-- If you want more flexibility meaning you want to use --443 flag you would need to adjust server.py.
+- If you want more flexibility meaning you want to use `--443` flag you would need to adjust server.py.
     + If you decide to do that you can chose on what port/protocol snare listens in your Dockerfile (CMD line).
 
 **P.S.** Another way to manipulate http or https availability is in your docker-compose file with port mapping (`e.g. 443:433`).
