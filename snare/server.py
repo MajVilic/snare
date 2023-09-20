@@ -17,12 +17,14 @@ class HttpRequestHandler:
         self.dir = run_args.full_page_path
         self.meta = meta
         self.snare_uuid = snare_uuid
-        self.logger = logging.getLogger(__name__)
         self.sroute = StaticRoute(name=None, prefix="/", directory=self.dir)
         self.tanner_handler = TannerHandler(run_args, meta, snare_uuid)
         self.ssl_cert = run_args.ssl_cert
         self.ssl_key = run_args.ssl_key
 
+        #Logging
+        self.logger = logging.getLogger(__name__)
+        logging.basicConfig(level=logging.DEBUG if debug else logging.INFO)
 
     async def submit_slurp(self, data):
         try:
@@ -40,6 +42,7 @@ class HttpRequestHandler:
             self.logger.error("Error submitting slurp: %s", e)
 
     async def handle_request(self, request):
+        self.logger.info("Handling request: %s", request)
         self.logger.info("Request path: {0}".format(request.path_qs))
         data = self.tanner_handler.create_data(request, 200)
         if request.method == "POST":
@@ -76,6 +79,7 @@ class HttpRequestHandler:
         return web.Response(body=content, status=status_code, headers=headers)
 
     async def start(self):
+        self.logger.info("Starting the web application...")
         app = web.Application()
         app.add_routes([web.route("*", "/{tail:.*}", self.handle_request)])
         aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader(self.dir))
@@ -106,8 +110,9 @@ class HttpRequestHandler:
             https_site = web.TCPSite(self.runner, self.run_args.host_ip, 443, ssl_context=ssl_context)
             await https_site.start()
 
+        self.logger.info("Web application started successfully.")
         names = sorted(str(s.name) for s in self.runner.sites)
         print("======== Running on {} ========\n" "(Press CTRL+C to quit)".format(", ".join(names)))
-
+        
     async def stop(self):
         await self.runner.cleanup()
