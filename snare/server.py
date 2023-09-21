@@ -88,8 +88,9 @@ class HttpRequestHandler:
         try:
             if self.ssl_cert and self.ssl_key:
                 self.logger.info("Creating SSL Context with Cert: %s and Key: %s", self.ssl_cert, self.ssl_key)
-                ssl_context = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
+                ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)  # adjusted line
                 ssl_context.load_cert_chain(certfile=self.ssl_cert, keyfile=self.ssl_key)
+                self.logger.info("SSL Context created successfully.")  # added line
             else:
                 self.logger.warning("SSL Cert or Key not provided. HTTPS will not be available.")
                 ssl_context = None
@@ -103,6 +104,8 @@ class HttpRequestHandler:
                 https_site = web.TCPSite(self.runner, self.run_args.host_ip, 443, ssl_context=ssl_context)
                 await https_site.start()
 
+        except ssl.SSLError as e:  # adjusted line
+            self.logger.error("SSL Error: %s", str(e))  # adjusted line
         except Exception as e:
             self.logger.exception("Error starting the server: %s", str(e))
 
