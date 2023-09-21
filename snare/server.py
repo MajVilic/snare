@@ -17,14 +17,11 @@ class HttpRequestHandler:
         self.dir = run_args.full_page_path
         self.meta = meta
         self.snare_uuid = snare_uuid
+        self.logger = logging.getLogger(__name__)
         self.sroute = StaticRoute(name=None, prefix="/", directory=self.dir)
         self.tanner_handler = TannerHandler(run_args, meta, snare_uuid)
         self.ssl_cert = run_args.ssl_cert
         self.ssl_key = run_args.ssl_key
-
-        #Logging
-        self.logger = logging.getLogger(__name__)
-        logging.basicConfig(level=logging.DEBUG if debug else logging.INFO)
 
     async def submit_slurp(self, data):
         try:
@@ -42,7 +39,6 @@ class HttpRequestHandler:
             self.logger.error("Error submitting slurp: %s", e)
 
     async def handle_request(self, request):
-        self.logger.info("Handling request: %s", request)
         self.logger.info("Request path: {0}".format(request.path_qs))
         data = self.tanner_handler.create_data(request, 200)
         if request.method == "POST":
@@ -52,10 +48,7 @@ class HttpRequestHandler:
                 self.logger.info("\t- {0}: {1}".format(key, val))
             data["post_data"] = dict(post_data)
 
-        # Submit the event to the TANNER service
         event_result = await self.tanner_handler.submit_data(data)
-
-        # Log the event to slurp service if enabled
         if self.run_args.slurp_enabled:
             await self.submit_slurp(request.path_qs)
 
@@ -79,7 +72,6 @@ class HttpRequestHandler:
         return web.Response(body=content, status=status_code, headers=headers)
 
     async def start(self):
-        self.logger.info("Starting the web application...")
         app = web.Application()
         app.add_routes([web.route("*", "/{tail:.*}", self.handle_request)])
         aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader(self.dir))
@@ -93,26 +85,29 @@ class HttpRequestHandler:
         self.runner = web.AppRunner(app)
         await self.runner.setup()
 
-        # Create an SSL context
-        if self.ssl_cert and self.ssl_key:
-            ssl_context = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
-            ssl_context.load_cert_chain(certfile=self.ssl_cert, keyfile=self.ssl_key)
-        else:
-            ssl_context = None
+        try:
+            if self.ssl_cert and self.ssl_key:
+                self.logger.info("Creating SSL Context with Cert: %s and Key: %s", self.ssl_cert, self.ssl_key)
+                ssl_context = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
+                ssl_context.load_cert_chain(certfile=self.ssl_cert, keyfile=self.ssl_key)
+            else:
+                self.logger.warning("SSL Cert or Key not provided. HTTPS will not be available.")
+                ssl_context = None
 
-        # For HTTP
-        http_site = web.TCPSite(self.runner, self.run_args.host_ip, self.run_args.port)
-        await http_site.start()
+            self.logger.info("Starting HTTP site on %s:%s", self.run_args.host_ip, self.run_args.port)
+            http_site = web.TCPSite(self.runner, self.run_args.host_ip, self.run_args.port)
+            await http_site.start()
 
-        
-        # For HTTPS
-        if ssl_context:
-            https_site = web.TCPSite(self.runner, self.run_args.host_ip, 443, ssl_context=ssl_context)
-            await https_site.start()
+            if ssl_context:
+                self.logger.info("Starting HTTPS site on %s:443", self.run_args.host_ip)
+                https_site = web.TCPSite(self.runner, self.run_args.host_ip, 443, ssl_context=ssl_context)
+                await https_site.start()
 
-        self.logger.info("Web application started successfully.")
+        except Exception as e:
+            self.logger.exception("Error starting the server: %s", str(e))
+
         names = sorted(str(s.name) for s in self.runner.sites)
         print("======== Running on {} ========\n" "(Press CTRL+C to quit)".format(", ".join(names)))
-        
+
     async def stop(self):
         await self.runner.cleanup()
