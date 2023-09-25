@@ -10,6 +10,7 @@ $\color{red}\textsf{\Large\&#x26A0;\kern{0.2cm}\large  Important}$
     - Adjusting github url and checkout.
     - Mapping certificate, key from `/root/dist`. Files in `/root/dist` are copied from `dist/` on host machine - already configured.
 - Port 443 needs to be added into docker-compose file.
+- Two additional parameters were added into snare initialization file `--ssl-cert` and `--ssl-key`. These parameters need to be included in Dockerfile as flags this tells snare initialization file to look for certificate and key at particular path (e.q. `CMD --ssl-cert /home/ssl/<certificate_name> --ssl-key /home/ssl/<key_name>`). $\color{red}\textsf{\Large\&#x24D8;\kern{0.2cm}}$
 
 **Recomended settings**
 
