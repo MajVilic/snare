@@ -10,11 +10,11 @@ $\color{red}\textsf{\Large\&#x26A0;\kern{0.2cm}\large  Important}$
     - Adjusting github url and checkout.
     - Mapping certificate, key from `/root/dist`. Files in `/root/dist` are copied from `dist/` on host machine - already configured.
 - Port 443 needs to be added into docker-compose file.
-- Two additional parameters were added into snare initialization file `--ssl-cert` and `--ssl-key`. These parameters need to be included in Dockerfile as flags this tells snare initialization file to look for certificate and key at particular path (e.q. `CMD --ssl-cert /home/ssl/<certificate_name> --ssl-key /home/ssl/<key_name>`). $\color{red}\textsf{\Large\&#x24D8;\kern{0.2cm}}$
+- Two additional parameters were added into snare initialization file `--ssl-cert` and `--ssl-key`. These parameters need to be included in Dockerfile as flags this tells snare initialization file to look for certificate and key at particular path (`e.q. CMD --ssl-cert /home/ssl/<certificate_name> --ssl-key /home/ssl/<key_name>`). $\color{red}\textsf{\Large\&#x24D8;\kern{0.2cm}}$
 
 **Recomended settings**
 
-- Adjust docker daemon, create: `etc/docker/daemon.json`. In case when you have only specific honeypots enabled. Limit your ip address pool to have less impact on your system. (e.g. `192.168.1.1/28`).
+- Adjust docker daemon, create: `etc/docker/daemon.json`. In case when you have only specific honeypots enabled. Limit your ip address pool to have less impact on your system. (e.q. `192.168.1.1/28`).
     - Adjust `/usr/local/bin/adjust-routing-table.sh`. In case you made changes to ip routing table manualy or via daemon.json you need to put those changes to `adjust-routing-table.sh`. This code automaticaly flunshes ip route table and makes a default update. Another option is to simply stop this service from running. $\color{red}\textsf{\Large\&#x24D8;\kern{0.2cm}}$
 - Change `/etc/crontab`. Comment out image update. If you leave your image names the same in your custom configuration they will get replaced/updated by pulling of original images. $\color{red}\textsf{\Large\&#x24D8;\kern{0.2cm}}$
 
@@ -27,7 +27,7 @@ As of right now modified snare supports both http and https.
 - If you want more flexibility meaning you want to use `--443` flag you would need to adjust server.py.
     + If you decide to do that you can chose on what port/protocol snare listens in your Dockerfile (CMD line).
 
-**P.S.** Another way to manipulate http or https availability is in your docker-compose file with port mapping (`e.g. 443:433`).
+**P.S.** Another way to manipulate http or https availability is in your docker-compose file with port mapping (`e.q. 443:433`).
 
 --------------
 
@@ -62,7 +62,7 @@ Getting started
 
 #### Steps to setup
 
-1. Get SNARE: `git clone https://github.com/mushorg/snare.git` and `cd snare`
+1. Get SNARE: `git clone https://github.com/mushorg/snare.qit` and `cd snare`
 2. [Optional] Make virtual environment: `python3 -m venv venv`
 3. [Optional] Activate virtual environment: `. venv/bin/activate`
 
