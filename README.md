@@ -14,7 +14,7 @@ $\color{red}\textsf{\Large\&#x26A0;\kern{0.2cm}\large  Important}$
 
 **Recomended settings**
 
-- Adjust docker daemon, create: `etc/docker/daemon.json`. In case when you have only specific honeypots enabled. Limit your ip address pool to have less impact on your system. (e.q. `192.168.1.1/28`). Chose initial daemon subnetcarefully if you set a very small subnet, new custom networks wont be able to further subnet the initial network and will fall to default network subnet alocation (docker however tries to avoid conflicts with your host machine network).
+- Adjust docker daemon, create: `etc/docker/daemon.json`. In case when you have only specific honeypots enabled. Limit your ip address pool to have less impact on your system. (e.q. `192.168.1.1/28`). Chose initial daemon subnet carefully if you set a very small subnet, new custom networks wont be able to further subnet the initial network and will fall to default network subnet alocation (docker however tries to avoid conflicts with your host machine network).
     - Adjust `/usr/local/bin/adjust-routing-table.sh`. In case you made changes to ip routing table manualy or via daemon.json you need to put those changes to `adjust-routing-table.sh`. This code automaticaly flushes ip route table and makes a default update. Another option is to simply stop this service from running. $\color{red}\textsf{\Large\&#x24D8;\kern{0.2cm}}$
 - Change `/etc/crontab`. Comment out image update. If you leave your image names the same in your custom configuration they will get replaced/updated by pulling of original images. $\color{red}\textsf{\Large\&#x24D8;\kern{0.2cm}}$
 
