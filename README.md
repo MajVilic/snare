@@ -3,22 +3,22 @@ SNARE
 
 $\color{red}\textsf{\Large\&#x26A0;\kern{0.2cm}\large  Important}$ 
 
-**Deviation from original code from mushorg.**
+**Deviation from original code from mushorg**
 
 - Added capability for https request.
 - Aditional steps need to be configured in the original snare Dockerfile.
     - Adjusting github url and checkout.
-    - Mapping certificate, key from `/root/dist`. Files in `/root/dist` are copied from `dist/` on host machine - already configured.
+    - Mapping certificate, key from `/your/directory`. Files in `/your/directory` are copied to your $\color{SteelBlue}\textsf{snare container path of choice.}$ 
 - Port 443 needs to be added into docker-compose file.
-- Two additional parameters were added into snare initialization file `--ssl-cert` and `--ssl-key`. These parameters need to be included in Dockerfile as flags this tells snare initialization file to look for certificate and key at particular path inside snare container (`e.q. CMD --ssl-cert /home/ssl/<certificate_name> --ssl-key /home/ssl/<key_name>`). $\color{red}\textsf{\Large\&#x24D8;\kern{0.2cm}}$
+- Two additional parameters were added into snare initialization file `--ssl-cert` and `--ssl-key`. These parameters need to be included in Dockerfile as flags this tells snare initialization file to look for certificate and key at particular $\color{SteelBlue}\textsf{path inside snare container}$ (`e.q. CMD --ssl-cert /path/ssl/<certificate_name> --ssl-key /path/ssl/<key_name>`). $\color{red}\textsf{\Large\&#x24D8;\kern{0.2cm}}$
 
 **Recomended settings**
 
-- Adjust docker daemon, create: `etc/docker/daemon.json`. In case when you have only specific honeypots enabled. Limit your ip address pool to have less impact on your system. (e.q. `192.168.1.1/28`). Chose initial daemon subnet carefully if you set a very small subnet, new custom networks wont be able to further subnet the initial network and will fall to default network subnet alocation (docker however tries to avoid conflicts with your host machine network).
+- Adjust docker daemon and create `etc/docker/daemon.json`. That way you limit your ip address pool to have less impact on your system  (e.q. `192.168.1.1/28`). The more important reason is to avoid routing conflicts with your host default gatway ip adress. This pool only applies to containers on a bridge network. Custom networks have their own subnets created automaticaly (this process is random, docker however tries to avoid conflicts with your host machine network) if you don't specify them in docker-compose.
     - Adjust `/usr/local/bin/adjust-routing-table.sh`. In case you made changes to ip routing table manualy or via daemon.json you need to put those changes to `adjust-routing-table.sh`. This code automaticaly flushes ip route table and makes a default update. Another option is to simply stop this service from running. $\color{red}\textsf{\Large\&#x24D8;\kern{0.2cm}}$
 - Change `/etc/crontab`. Comment out image update. If you leave your image names the same in your custom configuration they will get replaced/updated by pulling of original images. $\color{red}\textsf{\Large\&#x24D8;\kern{0.2cm}}$
 
-**Additional info:**
+**Additional info**
 
 HTTPS usage is hardcoded in server.py aswell as its port. 
 - Therefore you don't need to specify `--443` port flag in CMD line in your Dockerfile (part of tpotice, on your host machine).
