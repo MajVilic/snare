@@ -27,7 +27,7 @@ As of right now modified snare supports both http and https.
 - If you want more flexibility meaning you want to use `--443` flag you would need to adjust server.py.
     + If you decide to do that you can chose on what port/protocol snare listens in your Dockerfile (CMD line).
 
-**P.S.** Another way to manipulate http or https availability is in your docker-compose file with port mapping (`e.q. 443:433`) aswell as
+**P.S.** Another way to manipulate http or https availability is in your docker-compose file with port mapping (`e.q. 443:433`).
 
 --------------
 
